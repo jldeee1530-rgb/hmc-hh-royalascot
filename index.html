@@ -195,6 +195,26 @@ img, video { max-width: 100%; }
     *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 
+
+/* ANNOUNCEMENT / WEBSITE UPDATES POP-UP SLIDESHOW */
+.updates-overlay{display:none;position:fixed;inset:0;z-index:100000;background:rgba(5,3,9,.88);align-items:center;justify-content:center;padding:20px}
+.updates-overlay.show{display:flex}
+.updates-panel{position:relative;width:min(900px,100%);background:linear-gradient(145deg,#28172d,#100a17);border:1px solid #d7b46c;padding:18px;box-shadow:0 20px 70px #000b}
+.updates-heading{text-align:center;color:#d7b46c;font-size:clamp(23px,4vw,34px);font-weight:normal;margin:8px 45px 5px}
+.updates-subtitle{text-align:center;color:#d6c4b0;font:11px Arial,sans-serif;letter-spacing:2px;margin:0 0 16px}
+.updates-stage{position:relative;background:#08060c;display:flex;align-items:center;justify-content:center;min-height:220px;height:min(58vh,560px);overflow:hidden;border:1px solid #8d6b45}
+.updates-stage img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
+.updates-caption{color:#f3e5c8;text-align:center;font:13px Arial,sans-serif;letter-spacing:1px;padding:12px 35px 4px;min-height:34px}
+.updates-close,.updates-arrow{position:absolute;background:rgba(25,14,34,.9);border:1px solid #d7b46c;color:#d7b46c;cursor:pointer;z-index:2}
+.updates-close{right:12px;top:12px;width:40px;height:40px;font-size:23px}
+.updates-arrow{top:50%;transform:translateY(-50%);width:42px;height:48px;font-size:22px}
+.updates-prev{left:10px}.updates-next{right:10px}
+.updates-dots{display:flex;justify-content:center;gap:7px;padding-top:10px}
+.updates-dots button{width:7px;height:7px;border:0;border-radius:50%;padding:0;background:#80664c;cursor:pointer}
+.updates-dots button.active{background:#d7b46c;transform:scale(1.35)}
+.updates-footer{text-align:center;color:#a99484;font:10px Arial,sans-serif;letter-spacing:1px;padding-top:9px}
+@media(max-width:600px){.updates-overlay{padding:10px}.updates-panel{padding:12px}.updates-stage{height:55vh;min-height:190px}.updates-arrow{width:36px;height:42px}.updates-close{top:8px;right:8px}}
+
 </style>
 
 </head>
@@ -249,6 +269,24 @@ img, video { max-width: 100%; }
     </div>
 
 </div>
+
+<!-- WEBSITE UPDATES POP-UP SLIDESHOW -->
+<div class="updates-overlay" id="updatesPopup" role="dialog" aria-modal="true" aria-labelledby="updatesHeading">
+  <div class="updates-panel">
+    <button class="updates-close" id="updatesClose" type="button" aria-label="Close updates">×</button>
+    <h2 class="updates-heading" id="updatesHeading">The Royal Announcement</h2>
+    <p class="updates-subtitle">LATEST UPDATES • MOMENTS • ANNOUNCEMENTS</p>
+    <div class="updates-stage">
+      <button class="updates-arrow updates-prev" id="updatesPrev" type="button" aria-label="Previous slide">❮</button>
+      <img id="updatesImage" src="" alt="Website update">
+      <button class="updates-arrow updates-next" id="updatesNext" type="button" aria-label="Next slide">❯</button>
+    </div>
+    <div class="updates-caption" id="updatesCaption" aria-live="polite"></div>
+    <div class="updates-dots" id="updatesDots"></div>
+    <div class="updates-footer">SLIDES CHANGE AUTOMATICALLY • USE THE ARROWS TO NAVIGATE</div>
+  </div>
+</div>
+
 <script>
 
 /* =====================================
@@ -642,6 +680,80 @@ v.addEventListener('loadedmetadata', () => {
     ).style.display = 'none';
 
 });
+
+
+/* WEBSITE UPDATES SLIDESHOW
+   Uses the existing website album images. Add or replace image paths
+   in updateSlides to publish new announcements and updates. */
+const updateSlides = [
+  { image: 'media/album1/photo1.png', caption: 'A glimpse of our royal celebration' },
+  { image: 'media/album2/photo5.png', caption: 'Memories and moments worth sharing' },
+  { image: 'media/album3/photo8.png', caption: 'Stay tuned for more event updates' }
+];
+
+(function initUpdatesSlideshow(){
+  const popup = document.getElementById('updatesPopup');
+  const image = document.getElementById('updatesImage');
+  const caption = document.getElementById('updatesCaption');
+  const dots = document.getElementById('updatesDots');
+  if (!popup || !image || !caption || !dots || !updateSlides.length) return;
+
+  let current = 0;
+  let timer = null;
+
+  function showSlide(index){
+    current = (index + updateSlides.length) % updateSlides.length;
+    image.src = updateSlides[current].image;
+    caption.textContent = updateSlides[current].caption;
+    dots.querySelectorAll('button').forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+      dot.setAttribute('aria-current', i === current ? 'true' : 'false');
+    });
+  }
+
+  updateSlides.forEach((slide, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', 'Show update ' + (i + 1));
+    dot.addEventListener('click', () => { showSlide(i); restartTimer(); });
+    dots.appendChild(dot);
+  });
+
+  function stopTimer(){ if (timer) { clearInterval(timer); timer = null; } }
+  function startTimer(){ stopTimer(); timer = setInterval(() => showSlide(current + 1), 4500); }
+  function restartTimer(){ startTimer(); }
+
+  function closePopup(){
+    popup.classList.remove('show');
+    stopTimer();
+    try { sessionStorage.setItem('royalUpdatesSeen', 'yes'); } catch(e) {}
+  }
+
+  document.getElementById('updatesClose').addEventListener('click', closePopup);
+  document.getElementById('updatesPrev').addEventListener('click', () => { showSlide(current - 1); restartTimer(); });
+  document.getElementById('updatesNext').addEventListener('click', () => { showSlide(current + 1); restartTimer(); });
+
+  popup.addEventListener('click', event => {
+    if (event.target === popup) closePopup();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (!popup.classList.contains('show')) return;
+    if (event.key === 'Escape') closePopup();
+    if (event.key === 'ArrowLeft') { showSlide(current - 1); restartTimer(); }
+    if (event.key === 'ArrowRight') { showSlide(current + 1); restartTimer(); }
+  });
+
+  showSlide(0);
+  let alreadySeen = false;
+  try { alreadySeen = sessionStorage.getItem('royalUpdatesSeen') === 'yes'; } catch(e) {}
+  if (!alreadySeen) {
+    window.setTimeout(() => {
+      popup.classList.add('show');
+      startTimer();
+    }, 900);
+  }
+})();
 
 </script>
 
