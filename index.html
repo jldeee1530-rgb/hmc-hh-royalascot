@@ -1569,41 +1569,15 @@
             let current = 0;
             let timer = null;
 
-function showSlide(index) {
-    current = (index + updateSlides.length) % updateSlides.length;
-
-    const slide = updateSlides[current];
-
-    const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(slide.image);
-
-    if (isVideo) {
-        image.style.display = 'none';
-
-        video.style.display = 'block';
-        video.src = slide.image;
-        video.load();
-
-        video.play().catch(error => {
-            console.log('Video autoplay prevented:', error);
-        });
-
-    } else {
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-        video.style.display = 'none';
-
-        image.style.display = 'block';
-        image.src = slide.image;
-    }
-
-    caption.textContent = slide.caption;
-
-    dots.querySelectorAll('button').forEach((dot, i) => {
-        dot.classList.toggle('active', i === current);
-        dot.setAttribute('aria-current', i === current ? 'true' : 'false');
-    });
-}
+            function showSlide(index) {
+                current = (index + updateSlides.length) % updateSlides.length;
+                image.src = updateSlides[current].image;
+                caption.textContent = updateSlides[current].caption;
+                dots.querySelectorAll('button').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === current);
+                    dot.setAttribute('aria-current', i === current ? 'true' : 'false');
+                });
+            }
 
             updateSlides.forEach((slide, i) => {
                 const dot = document.createElement('button');
