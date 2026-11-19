@@ -1623,7 +1623,19 @@
                 if (isVideo) stopTimer();
                 else startTimer();
             }
+document.addEventListener('click', function enableVideoSound() {
+    const video = document.getElementById('updatesVideo');
 
+    if (video) {
+        video.muted = false;
+        video.volume = 1.0;
+
+        video.play().catch(error => {
+            console.log('Playback requires interaction:', error);
+        });
+    }
+
+}, { once: true });
             updateSlides.forEach((slide, i) => {
                 const dot = document.createElement('button');
                 dot.type = 'button';
