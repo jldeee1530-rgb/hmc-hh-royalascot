@@ -915,7 +915,9 @@
             border: 1px solid #8d6b45
         }
 
-        .updates-stage img {
+        .updates-stage img,
+        .updates-stage video {
+            display: block;
             max-width: 100%;
             max-height: 100%;
             width: 100%;
@@ -1562,21 +1564,59 @@
         (function initUpdatesSlideshow() {
             const popup = document.getElementById('updatesPopup');
             const image = document.getElementById('updatesImage');
+            const video = document.getElementById('updatesVideo');
             const caption = document.getElementById('updatesCaption');
             const dots = document.getElementById('updatesDots');
-            if (!popup || !image || !caption || !dots || !updateSlides.length) return;
+            if (!popup || !image || !video || !caption || !dots || !updateSlides.length) return;
 
             let current = 0;
             let timer = null;
 
             function showSlide(index) {
                 current = (index + updateSlides.length) % updateSlides.length;
-                image.src = updateSlides[current].image;
-                caption.textContent = updateSlides[current].caption;
+                const slide = updateSlides[current];
+                const isVideo = /\\.(mp4|webm|ogg)(\\?.*)?$/i.test(slide.image);
+
+                if (isVideo) {
+                    image.style.display = 'none';
+
+                    // Avoid restarting the same video unnecessarily.
+                    video.style.display = 'block';
+                    video.loop = true;
+                    video.muted = true;
+                    video.playsInline = true;
+
+                    const videoPath = new URL(slide.image, document.baseURI).href;
+                    if (video.src !== videoPath) {
+                        video.src = slide.image;
+                        video.load();
+                    }
+
+                    const playPromise = video.play();
+                    if (playPromise && typeof playPromise.catch === 'function') {
+                        playPromise.catch(error => {
+                            console.warn('Announcement video could not autoplay:', error);
+                        });
+                    }
+                } else {
+                    video.pause();
+                    video.removeAttribute('src');
+                    video.load();
+                    video.style.display = 'none';
+
+                    image.style.display = 'block';
+                    image.src = slide.image;
+                }
+
+                caption.textContent = slide.caption;
                 dots.querySelectorAll('button').forEach((dot, i) => {
                     dot.classList.toggle('active', i === current);
                     dot.setAttribute('aria-current', i === current ? 'true' : 'false');
                 });
+
+                // Keep the video visible for playback; the timer is managed below.
+                if (isVideo) stopTimer();
+                else startTimer();
             }
 
             updateSlides.forEach((slide, i) => {
@@ -1587,9 +1627,24 @@
                 dots.appendChild(dot);
             });
 
-            function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
-            function startTimer() { stopTimer(); timer = setInterval(() => showSlide(current + 1), 4500); }
-            function restartTimer() { startTimer(); }
+            function stopTimer() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            function startTimer() {
+                stopTimer();
+                const activeSlide = updateSlides[current];
+                const activeIsVideo = /\\.(mp4|webm|ogg)(\\?.*)?$/i.test(activeSlide.image);
+                if (activeIsVideo) return; // Do not advance away from a playing video.
+                timer = setTimeout(() => showSlide(current + 1), 4500);
+            }
+
+            function restartTimer() {
+                startTimer();
+            }
 
             function closePopup() {
                 popup.classList.remove('show');
