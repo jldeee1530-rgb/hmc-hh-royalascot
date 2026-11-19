@@ -1556,7 +1556,7 @@
            Uses the existing website album images. Add or replace image paths
            in updateSlides to publish new announcements and updates. */
         const updateSlides = [
-            { video: 'media/announcement/TEASERROYALASCOT.mp4', caption: 'A glimpse of our royal celebration' },
+            { image: 'media/announcement/TEASERROYALASCOT.mp4', caption: 'A glimpse of our royal celebration' },
             { image: 'media/album2/photo5.png', caption: 'Memories and moments worth sharing' },
             { image: 'media/album3/photo8.png', caption: 'Stay tuned for more event updates' }
         ];
@@ -1565,6 +1565,9 @@
             const popup = document.getElementById('updatesPopup');
             const image = document.getElementById('updatesImage');
             const video = document.getElementById('updatesVideo');
+            video.addEventListener('error', () => {
+                console.error('Announcement video failed to load:', video.currentSrc || video.src, video.error);
+            });
             const caption = document.getElementById('updatesCaption');
             const dots = document.getElementById('updatesDots');
             if (!popup || !image || !video || !caption || !dots || !updateSlides.length) return;
@@ -1575,7 +1578,8 @@
             function showSlide(index) {
                 current = (index + updateSlides.length) % updateSlides.length;
                 const slide = updateSlides[current];
-                const isVideo = /\\.(mp4|webm|ogg)(\\?.*)?$/i.test(slide.image);
+                const mediaPath = slide.video || slide.image;
+                const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(mediaPath || '');
 
                 if (isVideo) {
                     image.style.display = 'none';
@@ -1583,12 +1587,12 @@
                     // Avoid restarting the same video unnecessarily.
                     video.style.display = 'block';
                     video.loop = true;
-                    video.muted = true; 
+                    video.muted = true;
                     video.playsInline = true;
 
-                    const videoPath = new URL(slide.image, document.baseURI).href;
+                    const videoPath = new URL(mediaPath, document.baseURI).href;
                     if (video.src !== videoPath) {
-                        video.src = slide.image;
+                        video.src = mediaPath;
                         video.load();
                     }
 
@@ -1605,7 +1609,7 @@
                     video.style.display = 'none';
 
                     image.style.display = 'block';
-                    image.src = slide.image;
+                    image.src = mediaPath;
                 }
 
                 caption.textContent = slide.caption;
@@ -1637,7 +1641,8 @@
             function startTimer() {
                 stopTimer();
                 const activeSlide = updateSlides[current];
-                const activeIsVideo = /\\.(mp4|webm|ogg)(\\?.*)?$/i.test(activeSlide.image);
+                const activeMediaPath = activeSlide.video || activeSlide.image;
+                const activeIsVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(activeMediaPath || '');
                 if (activeIsVideo) return; // Do not advance away from a playing video.
                 timer = setTimeout(() => showSlide(current + 1), 4500);
             }
