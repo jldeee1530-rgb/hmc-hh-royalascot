@@ -884,7 +884,66 @@
             background: linear-gradient(145deg, #28172d, #100a17);
             border: 1px solid #d7b46c;
             padding: 18px;
-            box-shadow: 0 20px 70px #000b
+            box-shadow: 0 20px 70px #000b;
+            transition: width .25s ease, padding .25s ease, background .25s ease, border .25s ease;
+        }
+
+        /* Transparent PNG announcements appear as a floating cut-out image. */
+        .updates-panel.png-mode {
+            width: auto;
+            max-width: min(94vw, 1100px);
+            padding: 0;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .updates-panel.png-mode .updates-heading,
+        .updates-panel.png-mode .updates-subtitle,
+        .updates-panel.png-mode .updates-caption,
+        .updates-panel.png-mode .updates-dots,
+        .updates-panel.png-mode .updates-footer {
+            display: none;
+        }
+
+        .updates-panel.png-mode .updates-stage {
+            width: auto;
+            height: auto;
+            min-height: 0;
+            max-width: 94vw;
+            max-height: 88vh;
+            overflow: visible;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .updates-panel.png-mode .updates-stage img {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 94vw;
+            max-height: 88vh;
+            object-fit: contain;
+            filter: drop-shadow(0 22px 24px rgba(0,0,0,.72))
+                    drop-shadow(0 5px 9px rgba(215,180,108,.22));
+        }
+
+        .updates-panel.png-mode .updates-arrow {
+            background: rgba(25,14,34,.78);
+            box-shadow: 0 5px 18px rgba(0,0,0,.45);
+        }
+
+        /* Videos keep the original framed announcement presentation. */
+        .updates-panel.video-mode .updates-stage {
+            border: 2px solid #d7b46c;
+            background: #08060c;
+            box-shadow: 0 16px 45px rgba(0,0,0,.55);
+        }
+
+        .updates-panel.video-mode .updates-stage video {
+            border: 5px solid #211426;
+            box-shadow: inset 0 0 0 1px #d7b46c;
         }
 
         .updates-heading {
@@ -1580,6 +1639,10 @@
                 const slide = updateSlides[current];
                 const mediaPath = slide.video || slide.image;
                 const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(mediaPath || '');
+
+                const panel = popup.querySelector('.updates-panel');
+                panel.classList.toggle('video-mode', isVideo);
+                panel.classList.toggle('png-mode', !isVideo && /\.png(\?.*)?$/i.test(mediaPath || ''));
 
                 if (isVideo) {
                     image.style.display = 'none';
