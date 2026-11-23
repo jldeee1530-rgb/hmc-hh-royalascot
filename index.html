@@ -1011,20 +1011,28 @@
             font-size: 23px
         }
 
+        .updates-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            padding: 14px 0 2px;
+        }
+
         .updates-arrow {
-            top: 50%;
-            transform: translateY(-50%);
-            width: 42px;
-            height: 48px;
-            font-size: 22px
+            position: static;
+            transform: none;
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
+            border-radius: 50%;
+            box-shadow: 0 5px 18px rgba(0,0,0,.35);
         }
 
-        .updates-prev {
-            left: 10px
-        }
-
+        .updates-prev,
         .updates-next {
-            right: 10px
+            left: auto;
+            right: auto;
         }
 
         .updates-dots {
@@ -1071,9 +1079,14 @@
                 min-height: 190px
             }
 
+            .updates-controls {
+                gap: 14px;
+                padding-top: 10px;
+            }
+
             .updates-arrow {
-                width: 36px;
-                height: 42px
+                width: 40px;
+                height: 40px;
             }
 
             .updates-close {
@@ -1194,8 +1207,6 @@
             <h2 class="updates-heading" id="updatesHeading">The Royal Announcement</h2>
             <p class="updates-subtitle">LATEST UPDATES • MOMENTS • ANNOUNCEMENTS</p>
             <div class="updates-stage">
-                <button class="updates-arrow updates-prev" id="updatesPrev" type="button"
-                    aria-label="Previous slide">❮</button>
                 <img id="updatesImage" src="" alt="Website update">
                 <video
     id="updatesVideo"
@@ -1206,6 +1217,10 @@
     playsinline
     style="display:none; width:100%; height:100%; object-fit:contain;">
 </video>
+            </div>
+            <div class="updates-controls" aria-label="Announcement navigation">
+                <button class="updates-arrow updates-prev" id="updatesPrev" type="button"
+                    aria-label="Previous slide">❮</button>
                 <button class="updates-arrow updates-next" id="updatesNext" type="button"
                     aria-label="Next slide">❯</button>
             </div>
@@ -1616,7 +1631,7 @@
            in updateSlides to publish new announcements and updates. */
         const updateSlides = [
             { image: 'media/announcement/TEASERROYALASCOT.mp4', caption: 'A glimpse of our royal celebration' },
-            { image: 'media/announcement/a1.png', caption: 'Memories and moments worth sharing' },
+            { image: 'media/album2/photo5.png', caption: 'Memories and moments worth sharing' },
             { image: 'media/album3/photo8.png', caption: 'Stay tuned for more event updates' }
         ];
 
