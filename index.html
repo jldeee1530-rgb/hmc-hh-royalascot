@@ -1102,7 +1102,7 @@
     <header>
         <div class="wrap nav">
             <div class="brand">♛ &nbsp; HH | HMC Christmas Party 2026</div>
-            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#albums">ALBUMS</a></nav>
+            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#ROYAL-TEASER">TEASER</a><a href="#albums">ALBUMS</a></nav>
         </div>
     </header>
     <main id="home">
@@ -1124,12 +1124,11 @@
                 <h2 class="section-title">The Royal Ascot Dress Code Guide</h2>
                 <p class="section-sub">Dress to Impress, Be unique</p>
                 <div class="frame">
-                    <div class="video-box" id="videoBox">
-                        
-                        <div class="empty" id="videoEmpty">
+                    <div class="video-box">
+                        <div class="empty">
                             <div class="play">▶</div><strong>Your Grand Premiere Awaits</strong>
                             <p>Place your video at <b>media/royal-video.mp4</b><br>to showcase it here.</p>
-                        </div><video id="royalVideo" controls playsinline preload="metadata" style="display:none">
+                        </div><video controls playsinline preload="metadata" style="display:none">
                             <source src="media/royal-video.mp4" type="video/mp4">Your browser does not support HTML
                             video.
                         </video>
@@ -1137,17 +1136,17 @@
                 </div>
             </div>
         </section>
-          <section id="PROGRAM">
+
+        <section id="ROYAL-TEASER">
             <div class="wrap">
-                <h2 class="section-title">The Royal Ascot Dress Code Guide</h2>
+                <h2 class="section-title">Royal Ascot Teaser</h2>
                 <p class="section-sub">Dress to Impress, Be unique</p>
                 <div class="frame">
-                    <div class="video-box" id="videoBox">
-                        
-                        <div class="empty" id="videoEmpty">
+                    <div class="video-box">
+                        <div class="empty">
                             <div class="play">▶</div><strong>Your Grand Premiere Awaits</strong>
                             <p>Place your video at <b>media/1TEASERROYALASCOT.mp4</b><br>to showcase it here.</p>
-                        </div><video id="royalVideo" controls playsinline preload="metadata" style="display:none">
+                        </div><video controls playsinline preload="metadata" style="display:none">
                             <source src="media/1TEASERROYALASCOT.mp4" type="video/mp4">Your browser does not support HTML
                             video.
                         </video>
@@ -1632,17 +1631,71 @@
            ROYAL VIDEO PLAYER
         ===================================== */
 
-        const v = document.getElementById('royalVideo');
+        const royalVideos = Array.from(document.querySelectorAll('.video-box video'));
+        let playbackUpdate = 0;
 
-        v.addEventListener('loadedmetadata', () => {
+        royalVideos.forEach((video) => {
+            const empty = video.parentElement.querySelector('.empty');
+            video.muted = false;
 
-            v.style.display = 'block';
+            video.addEventListener('loadedmetadata', () => {
+                video.style.display = 'block';
+                empty.style.display = 'none';
+                scheduleCenteredPlayback();
+            });
 
-            document.getElementById(
-                'videoEmpty'
-            ).style.display = 'none';
-
+            video.addEventListener('error', () => {
+                console.error('Royal video failed to load:', video.currentSrc, video.error);
+                empty.querySelector('strong').textContent = 'Unable to load this video';
+                empty.querySelector('p').textContent =
+                    'Check the file path and use an MP4 encoded with H.264 video and AAC audio.';
+            });
         });
+
+        function updateCenteredPlayback() {
+            playbackUpdate = 0;
+            const viewportCenter = window.innerHeight / 2;
+            const centerTolerance = window.innerHeight * 0.15;
+            let centeredVideo = null;
+            let closestDistance = Infinity;
+
+            royalVideos.forEach((video) => {
+                const bounds = video.parentElement.getBoundingClientRect();
+                const videoCenter = bounds.top + bounds.height / 2;
+                const distance = Math.abs(videoCenter - viewportCenter);
+
+                if (bounds.bottom > 0 && bounds.top < window.innerHeight &&
+                    distance <= centerTolerance && distance < closestDistance) {
+                    centeredVideo = video;
+                    closestDistance = distance;
+                }
+            });
+
+            royalVideos.forEach((video) => {
+                if (video === centeredVideo) {
+                    if (video.paused) {
+                        video.muted = false;
+                        video.play().catch((error) => {
+                            if (error.name !== 'AbortError') {
+                                console.error('Royal video autoplay failed:', error);
+                            }
+                        });
+                    }
+                } else if (!video.paused) {
+                    video.pause();
+                }
+            });
+        }
+
+        function scheduleCenteredPlayback() {
+            if (!playbackUpdate) {
+                playbackUpdate = window.requestAnimationFrame(updateCenteredPlayback);
+            }
+        }
+
+        window.addEventListener('scroll', scheduleCenteredPlayback, { passive: true });
+        window.addEventListener('resize', scheduleCenteredPlayback);
+        scheduleCenteredPlayback();
 
 
         /* WEBSITE UPDATES SLIDESHOW
