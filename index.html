@@ -57,19 +57,29 @@
             gap: 15px
         }
 
+        .nav nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: nowrap;
+            gap: 14px
+        }
+
         .brand {
             letter-spacing: 4px;
             font-size: 16px;
             color: var(--gold);
-            text-transform: uppercase
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0
         }
 
         .nav a {
             color: #f3e5c8;
             text-decoration: none;
-            font: 12px Arial, sans-serif;
-            letter-spacing: 2px;
-            margin-left: 25px
+            font: 11px Arial, sans-serif;
+            letter-spacing: 1.5px;
+            white-space: nowrap
         }
 
         .nav a:hover {
@@ -207,6 +217,58 @@
             text-align: center;
             z-index: 1;
             padding: 20px
+        }
+
+        .memory-videos {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px
+        }
+
+        .memory-card {
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #b58d4b;
+            background: linear-gradient(140deg, #b48a4b25, #190e22);
+            box-shadow: 0 16px 45px #0006
+        }
+
+        .memory-card h3 {
+            color: var(--gold);
+            font-weight: normal;
+            text-align: center;
+            margin: 4px 0 12px
+        }
+
+        .memory-video-box {
+            aspect-ratio: 16 / 9;
+            display: grid;
+            place-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #2b1934, #100b19);
+            border: 1px solid #6b4b52
+        }
+
+        .memory-video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain
+        }
+
+        .memory-video-box .empty {
+            text-align: center;
+            padding: 16px;
+            color: #dcccb8
+        }
+
+        .memory-video-box .empty strong {
+            color: var(--gold)
+        }
+
+        .memory-video-box .empty p {
+            font: 12px/1.6 Arial, sans-serif;
+            overflow-wrap: anywhere
         }
 
         .play {
@@ -552,6 +614,10 @@
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
+        .memory-videos {
+            grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr))
+        }
+
         .album {
             min-width: 0;
         }
@@ -588,6 +654,17 @@
                 padding-right: 0;
             }
 
+            .nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px 18px;
+            }
+
             .albums {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 18px;
@@ -602,7 +679,7 @@
             }
 
             .nav a {
-                margin-left: 14px;
+                margin: 0;
             }
         }
 
@@ -625,6 +702,7 @@
                 letter-spacing: 2px;
                 text-align: center;
                 line-height: 1.6;
+                white-space: normal;
             }
 
             nav {
@@ -1102,7 +1180,7 @@
     <header>
         <div class="wrap nav">
             <div class="brand">♛ &nbsp; HH | HMC Christmas Party 2026</div>
-            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#ROYAL-TEASER">TEASER</a><a href="#albums">ALBUMS</a><a href="#updatesPopup" id="openAnnouncements">ANNOUNCEMENTS</a></nav>
+            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#ROYAL-TEASER">TEASER</a><a href="#memory-lane">MEMORY LANE</a><a href="#albums">ALBUMS</a><a href="#updatesPopup" id="openAnnouncements">ANNOUNCEMENTS</a></nav>
         </div>
     </header>
     <main id="home">
@@ -1168,6 +1246,53 @@
                             video.
                         </video>
                     </div>
+                </div>
+            </div>
+        </section>
+        <section id="memory-lane">
+            <div class="wrap">
+                <h2 class="section-title">Memory Lane</h2>
+                <p class="section-sub">REVISIT THREE SPECIAL MOMENTS</p>
+                <div class="memory-videos">
+                    <article class="memory-card">
+                        <h3>Memory 1</h3>
+                        <div class="memory-video-box">
+                            <div class="empty">
+                                <strong>Video coming soon</strong>
+                                <p>Add your video at <b>media/memory-lane-1.mp4</b></p>
+                            </div>
+                            <video controls playsinline preload="metadata" style="display:none">
+                                <source src="media/memory-lane-1.mp4" type="video/mp4">
+                                Your browser does not support HTML video.
+                            </video>
+                        </div>
+                    </article>
+                    <article class="memory-card">
+                        <h3>Memory 2</h3>
+                        <div class="memory-video-box">
+                            <div class="empty">
+                                <strong>Video coming soon</strong>
+                                <p>Add your video at <b>media/memory-lane-2.mp4</b></p>
+                            </div>
+                            <video controls playsinline preload="metadata" style="display:none">
+                                <source src="media/memory-lane-2.mp4" type="video/mp4">
+                                Your browser does not support HTML video.
+                            </video>
+                        </div>
+                    </article>
+                    <article class="memory-card">
+                        <h3>Memory 3</h3>
+                        <div class="memory-video-box">
+                            <div class="empty">
+                                <strong>Video coming soon</strong>
+                                <p>Add your video at <b>media/memory-lane-3.mp4</b></p>
+                            </div>
+                            <video controls playsinline preload="metadata" style="display:none">
+                                <source src="media/memory-lane-3.mp4" type="video/mp4">
+                                Your browser does not support HTML video.
+                            </video>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
@@ -1723,11 +1848,27 @@
         window.addEventListener('resize', scheduleCenteredPlayback);
         scheduleCenteredPlayback();
 
+        document.querySelectorAll('.memory-video-box video').forEach((video) => {
+            const empty = video.parentElement.querySelector('.empty');
+
+            video.addEventListener('loadedmetadata', () => {
+                video.style.display = 'block';
+                empty.style.display = 'none';
+            });
+
+            video.addEventListener('error', () => {
+                console.error('Memory Lane video failed to load:', video.currentSrc, video.error);
+                empty.querySelector('strong').textContent = 'Unable to load this video';
+                empty.querySelector('p').textContent =
+                    'Check the media path and use an MP4 encoded with H.264 video and AAC audio.';
+            });
+        });
 
         /* WEBSITE UPDATES SLIDESHOW
            Uses the existing website album images. Add or replace image paths
            in updateSlides to publish new announcements and updates. */
         const updateSlides = [
+            { image: 'media/announcement/a3.png', caption: 'Let us Visit us the most happiest day once again' },
             { image: 'media/announcement/trailer2.mp4', caption: 'THE ROYAL COMPETION BEGIN SOON' },
             { image: 'media/announcement/TEASERROYALASCOT.mp4', caption: 'All aboard the Royal Ascot Train' },
             { image: 'media/announcement/a1.png', caption: 'The Royal Competitors as its finests' },
