@@ -1172,6 +1172,133 @@
                 right: 8px
             }
         }
+
+        /* FIVE ROYAL DEPARTMENT BANNERS + FIVE PHOTO HOLDERS EACH */
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .department-card-wrap {
+            position: relative;
+            min-width: 0;
+        }
+        .department-banner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-width: 0;
+            min-height: 300px;
+            padding: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+            background: linear-gradient(160deg, var(--banner-color), #100916 88%);
+            color: var(--cream);
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 12px 32px #0007;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .department-banner:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 38px #000a;
+        }
+        .department-banner img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .88;
+        }
+        .department-banner:after {
+            content: '';
+            position: absolute;
+            inset: 35% 0 0;
+            background: linear-gradient(transparent, rgba(8,5,12,.96));
+        }
+        .department-banner .banner-copy {
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 8px #000;
+        }
+        .department-banner .banner-crown {
+            display: block;
+            color: var(--gold);
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+        .department-banner h3 {
+            margin: 0;
+            font-size: clamp(16px, 1.5vw, 22px);
+            font-weight: normal;
+            line-height: 1.15;
+            color: #fff4d6;
+        }
+        .department-banner small {
+            display: block;
+            margin-top: 10px;
+            color: var(--gold);
+            font: 10px Arial, sans-serif;
+            letter-spacing: 1.5px;
+        }
+        .department-gallery {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .department-photo-holder {
+            min-width: 0;
+            width: 100%;
+            border: 1px solid #b08a54;
+            background: linear-gradient(145deg, #2b1934, #100b19);
+            padding: 7px;
+            cursor: zoom-in;
+            color: inherit;
+            font: inherit;
+            text-align: center;
+        }
+        .department-photo-holder.has-photo:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 18px #d7b46c66;
+        }
+        .department-photo-holder img {
+            pointer-events: none;
+        }
+        #modal.open { z-index: 1000; }
+        #lightbox.open { z-index: 1001; }
+        .department-photo-holder img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+        .department-photo-placeholder {
+            display: grid;
+            place-items: center;
+            gap: 9px;
+            aspect-ratio: 3 / 4;
+            padding: 10px;
+            border: 1px dashed #9e794c;
+            color: #c9b5a4;
+            text-align: center;
+            font: 11px/1.5 Arial, sans-serif;
+        }
+        .department-photo-placeholder b {
+            color: var(--gold);
+            font: normal 18px Georgia, serif;
+        }
+        @media(max-width: 1000px) {
+            .department-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .department-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media(max-width: 600px) {
+            .department-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+            .department-banner { min-height: 230px; }
+            .department-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        }
     </style>
 
 </head>
@@ -1298,9 +1425,9 @@
         </section>
         <section id="albums">
             <div class="wrap">
-                <h2 class="section-title">The Royal Collections</h2>
-                <p class="section-sub">THREE CHAPTERS OF UNFORGETTABLE MEMORIES</p>
-                <div class="albums" id="albumCards"></div>
+                <h2 class="section-title">DEPARTMENTS BANNER AND ITS CANDIDATES</h2>
+                <p class="section-sub">SELECT A ROYAL DEPARTMENT BANNER TO VIEW ITS FIVE PHOTOS</p>
+                <div class="albums" id="departmentCards"></div>
             </div>
         </section>
     </main>
@@ -1405,214 +1532,90 @@
            ROYAL ALBUM COLLECTIONS
         ===================================== */
 
-        const albums = [
-            {
-                title: 'Style 1',
-                subtitle: 'A magnificent beginning',
-                photos: [
-                    'media/album1/photo1.png',
-                    'media/album1/photo2.png',
-                    'media/album1/photo3.png',
-                    'media/album1/photo4.png',
-                    'media/album1/20.png',
-                    'media/album1/21.png',
-                    'media/album1/22.png',
-                    'media/album1/23.png',
-                    'media/album1/24.png',
-                    'media/album1/25.png',
-                    'media/album1/26.png',
-                    'media/album1/27.png',
-                    'media/album1/28.png',
-                    'media/album1/29.png',
-                    'media/album1/30.png',
-                    'media/album1/31.png',
-                    'media/album1/32.png',
-                ]
-            },
-            {
-                title: 'Style 2',
-                subtitle: 'Elegance in every memory',
-                photos: [
-                    'media/album2/photo5.png',
-                    'media/album2/photo6.png',
-                    'media/album2/photo7.png',
-                    'media/album2/201.png',
-                    'media/album2/11.png',
-                    'media/album2/12.png',
-                    'media/album2/13.png',
-                    'media/album2/14.png',
-                    'media/album2/15.png',
-                    'media/album2/16.png',
-                    'media/album2/17.png',
-                    'media/album2/18.png',
-                    'media/album2/19.png',
-
-                ]
-            },
-            {
-                title: 'Style 3',
-                subtitle: 'A celebration to remember',
-                photos: [
-                    'media/album3/photo8.png',
-                    'media/album3/photo9.png',
-                    'media/album3/photo10.png',
-                    'media/album3/31.png',
-                    'media/album3/32.png',
-                    'media/album3/33.png',
-                    'media/album3/34.png',
-                    'media/album3/35.png',
-                    'media/album3/36.png',
-                    'media/album3/37.png',
-                    'media/album3/38.png',
-                    'media/album3/39.png',
-                    'media/album3/40.png',
-                    'media/album3/41.png',
-                    'media/album3/42.png',
-                    'media/album3/43.png',
-                    'media/album3/44.png',
-                    'media/album3/45.png',
-
-                ]
-            }
+        const departments = [
+            { title: 'Nursing Department', banner: 'media/department-banners/nursing.png', color: '#102c54', folder: 'nursing' },
+            { title: 'Radiopharmalab Department', banner: 'media/department-banners/Radiopharmalab.png', color: '#06452d', folder: 'radiopharmalab' },
+            { title: 'Admin Department', banner: 'media/department-banners/admin.png', color: '#541b20', folder: 'admin' },
+            { title: 'HMC Department', banner: 'media/department-banners/hmc.png', color: '#e9dfc5', folder: 'hmc' },
+            { title: 'Dietary / Housekeeping Department', banner: 'media/department-banners/dietary.png', color: '#32152f', folder: 'dietary-housekeeping' }
         ];
 
-
-
-        /* =====================================
-           GLOBAL VARIABLES
-        ===================================== */
-
-        const cards = document.getElementById('albumCards');
-
+        const cards = document.getElementById('departmentCards');
         let activePhotos = [];
         let activePhotoIndex = 0;
 
+        /* Build the five clickable department banners. */
+        cards.classList.add('department-grid');
+        departments.forEach((department, i) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'department-card-wrap';
 
-        /* =====================================
-           GENERATE ALBUM CARDS
-        ===================================== */
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'department-banner';
+            card.style.setProperty('--banner-color', department.color);
+            card.setAttribute('aria-label', 'Open ' + department.title + ' photo gallery');
+            // Banner images are fixed in the source code; visitors cannot replace them.
+            card.innerHTML = `
+                <img src="${department.banner}" alt="${department.title} banner" onerror="this.style.display='none'">
+                <span class="banner-copy">
+                    <span class="banner-crown">♛</span>
+                    <h3>${department.title}</h3>
+                    <small>HH &amp; HMC • VIEW PHOTOS ↗</small>
+                </span>`;
+            card.addEventListener('click', () => openAlbum(i));
 
-        albums.forEach((album, i) => {
-
-            const el = document.createElement('article');
-
-            el.className = 'album';
-
-            el.innerHTML = `
-        <div class="cover" id="cover${i}">
-            <div class="placeholder">
-                <span class="icon">♛</span>
-                <small>
-                    ROYAL COLLECTION 0${i + 1}
-                </small>
-            </div>
-        </div>
-
-        <h3>${album.title}</h3>
-
-        <p>${album.subtitle}</p>
-
-        <button type="button">
-            VIEW ALBUM ↗
-        </button>
-    `;
-
-            el.querySelector('button').addEventListener(
-                'click',
-                () => openAlbum(i)
-            );
-
-            cards.appendChild(el);
-
-            const img = new Image();
-
-            img.onload = () => {
-                document.getElementById(
-                    'cover' + i
-                ).replaceChildren(img);
-            };
-
-            img.src = album.photos[0];
-
+            // Only the banner card is displayed. Banner changes are made by editing
+            // the image path in the departments array above, not by page visitors.
+            wrap.appendChild(card);
+            cards.appendChild(wrap);
         });
 
-
-        /* =====================================
-           OPEN ALBUM
-        ===================================== */
-
+        /* Each department opens a popup containing five photo holders. */
         function openAlbum(i) {
-
-            const album = albums[i];
-
-            document.getElementById(
-                'modalTitle'
-            ).textContent = album.title;
+            const department = departments[i];
+            const departmentPhotos = Array.from({ length: 5 }, (_, n) =>
+                `media/departments/${department.folder}/${n + 1}.jpg`
+            );
+            activePhotos = departmentPhotos;
+            document.getElementById('modalTitle').textContent = department.title;
 
             const gallery = document.getElementById('gallery');
-
+            gallery.className = 'gallery department-gallery';
             gallery.innerHTML = '';
 
-            let loadedCount = 0;
+            departmentPhotos.forEach((src, index) => {
+                const holder = document.createElement('button');
+                holder.type = 'button';
+                holder.className = 'department-photo-holder';
+                holder.setAttribute('aria-label', `View ${department.title} photo ${index + 1}`);
 
-            album.photos.forEach((src, index) => {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'department-photo-placeholder';
+                placeholder.innerHTML = `<b>PHOTO ${index + 1}</b><span>Image not found<br>Place file at:<br>${src}</span>`;
+                holder.appendChild(placeholder);
 
-                const img = new Image();
-
-                img.alt = album.title + ' photo';
-
+                const img = document.createElement('img');
+                img.alt = `${department.title} photo ${index + 1}`;
                 img.onload = () => {
-
-                    loadedCount++;
-
-                    gallery.appendChild(img);
-
-                    const empty = gallery.querySelector(
-                        '.no-photos'
-                    );
-
-                    if (empty) {
-                        empty.remove();
-                    }
-
+                    holder.replaceChildren(img);
+                    holder.classList.add('has-photo');
                 };
-
-                /* CLICK IMAGE TO MAXIMIZE */
-
-                img.addEventListener('click', () => {
-
-                    openImage(album.photos, index);
-
-                });
-
+                img.onerror = () => {
+                    // Keep the visible placeholder and its expected file path.
+                };
                 img.src = src;
-
+                holder.addEventListener('click', () => {
+                    if (img.complete && img.naturalWidth > 0) {
+                        openImage(departmentPhotos, index);
+                    }
+                });
+                gallery.appendChild(holder);
             });
 
-            setTimeout(() => {
-
-                if (!loadedCount) {
-
-                    gallery.innerHTML = `
-                <div class="no-photos">
-                    No photos yet.
-                    Add images to the corresponding
-                    media/album folder and refresh.
-                </div>
-            `;
-
-                }
-
-            }, 400);
-
-            document.getElementById(
-                'modal'
-            ).classList.add('open');
-
+            document.getElementById('modal').classList.add('open');
             document.body.style.overflow = 'hidden';
-
         }
-
 
         /* =====================================
            CLOSE ALBUM
@@ -1659,8 +1662,7 @@
             const image = document.getElementById(
                 'zoomedImage'
             );
-            const video = document.getElementById('updatesVideo');
-
+            image.onerror = () => { image.alt = 'Unable to load this photo. Check the department photo folder and filename.'; };
             image.src = activePhotos[activePhotoIndex];
 
             document.getElementById(
