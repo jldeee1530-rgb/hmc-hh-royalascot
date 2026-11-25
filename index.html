@@ -1174,10 +1174,13 @@
         }
 
         /* FIVE ROYAL DEPARTMENT BANNERS + FIVE PHOTO HOLDERS EACH */
+        .department-section .wrap {
+            max-width: 1280px;
+        }
         .department-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 14px;
+            gap: 18px;
         }
         .department-card-wrap {
             position: relative;
@@ -1189,8 +1192,8 @@
             flex-direction: column;
             justify-content: flex-end;
             min-width: 0;
-            min-height: 300px;
-            padding: 12px;
+            min-height: 390px;
+            padding: 16px;
             overflow: hidden;
             border: 1px solid var(--gold);
             background: linear-gradient(160deg, var(--banner-color), #100916 88%);
@@ -1293,10 +1296,11 @@
         @media(max-width: 1000px) {
             .department-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             .department-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .department-banner { min-height: 350px; }
         }
         @media(max-width: 600px) {
             .department-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-            .department-banner { min-height: 230px; }
+            .department-banner { min-height: 300px; }
             .department-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
         }
     </style>
@@ -1307,7 +1311,7 @@
     <header>
         <div class="wrap nav">
             <div class="brand">♛ &nbsp; HH | HMC Christmas Party 2026</div>
-            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#ROYAL-TEASER">TEASER</a><a href="#memory-lane">MEMORY LANE</a><a href="#albums">ALBUMS</a><a href="#updatesPopup" id="openAnnouncements">ANNOUNCEMENTS</a></nav>
+            <nav><a href="#home">HOME</a><a href="#PROGRAM">ROYAL PROGRAM</a><a href="#ROYAL-TEASER">TEASER</a><a href="#memory-lane">MEMORY LANE</a><a href="#albums">ALBUMS</a><a href="#department-banner">DEPARTMENT BANNER</a><a href="#updatesPopup" id="openAnnouncements">ANNOUNCEMENTS</a></nav>
         </div>
     </header>
     <main id="home">
@@ -1423,7 +1427,8 @@
                 </div>
             </div>
         </section>
-        <section id="albums">
+        <section id="albums" class="department-section">
+            <span id="department-banner" aria-hidden="true"></span>
             <div class="wrap">
                 <h2 class="section-title">DEPARTMENTS BANNER AND ITS CANDIDATES</h2>
                 <p class="section-sub">SELECT A ROYAL DEPARTMENT BANNER TO VIEW ITS FIVE PHOTOS</p>
